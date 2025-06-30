@@ -38,11 +38,14 @@ public final class CtOnlineReward extends JavaPlugin {
     public static YamlConfiguration lang;
     public static LanguageHandler languageHandler;
     public static YamlConfiguration placeholderYaml;
+    public boolean debugMode = false;
 
 
     @Override
     public void onEnable() {
         final long timestamp = System.currentTimeMillis();
+
+        this.debugMode = getConfig().getBoolean("Setting.Debug", false);
 
         this.getCommand("cor").setExecutor(CommandHandler.getInstance());
         getServer().getPluginManager().registerEvents(RewardSetInventoryMonitor.getInstance(), this);
@@ -80,7 +83,9 @@ public final class CtOnlineReward extends JavaPlugin {
             placeholder = new Placeholder();
             placeholder.register();
         } else {
-            getLogger().warning("§e§l未找到PlaceholderAPI.");
+            if (debugMode) {
+                getLogger().info("§e§l未找到PlaceholderAPI.");
+            }
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
@@ -91,7 +96,9 @@ public final class CtOnlineReward extends JavaPlugin {
         if (economyProvider != null) {
             economy = economyProvider.getProvider();
         } else {
-            getLogger().warning("§e§l初始化Vault失败.");
+            if (debugMode) {
+                getLogger().info("§e§l初始化Vault失败.");
+            }
         }
 
         YamlConfiguration yamlConfiguration = new YamlConfiguration();
@@ -139,6 +146,9 @@ public final class CtOnlineReward extends JavaPlugin {
 
     public void load() {
         saveDefaultConfig();
+        this.reloadConfig(); // 重新加载配置文件
+        this.debugMode = getConfig().getBoolean("Setting.Debug", false); // 更新 debugMode
+        debug("插件配置已重新加载，Debug模式状态: " + debugMode);
 
         File file = new File(getDataFolder() + "/rewardData/");
 
@@ -156,6 +166,9 @@ public final class CtOnlineReward extends JavaPlugin {
                 getPluginLoader().disablePlugin(this);
             }
         }
+        if (debugMode) {
+            logger.info("§a§l● Debug模式已开启.");
+        }
 
 
         YamlService yamlService = YamlService.getInstance();
@@ -166,8 +179,9 @@ public final class CtOnlineReward extends JavaPlugin {
             }
         } catch (Exception e) {
             logger.warning("§c§l■ Gui配置文件加载失败!");
-
-            e.printStackTrace();
+            if (debugMode) {
+                e.printStackTrace();
+            }
         }
 
         File langFile = new File(getDataFolder() + "/lang.yml");
@@ -191,7 +205,19 @@ public final class CtOnlineReward extends JavaPlugin {
 
         } catch (Exception e) {
             logger.warning("§c§l■ papi变量配置文件加载失败!");
-            e.printStackTrace();
+            if (debugMode) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void debug(String message) {
+        if (debugMode) {
+            getLogger().info("[DEBUG] " + message);
         }
     }
 

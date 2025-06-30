@@ -1,0 +1,30 @@
+10min:
+  #单位分钟
+  #变量{onlineTime}今日在线时间  {weekOnlineTime}本周在线时间 {monthOnlineTime}本月在线时间 {allOnlineTime} 总在线时间
+  #计算符号 ==等于 <=小于等于 >=大于等于 !=不等于 >大于 <小于 +加 -减 *乘 /除 &&与 ||或
+  time: "{onlineTime}>=10"
+  rewardData: '10min'
+  permission: 'CtOnlineReward.reward.10min'
+  #可领取时公告提醒
+  remind: true
+  command:
+    PlayerCommands:
+      - 'say 我领取了十分钟在线奖励'
+    OpCommands:
+      - 'me 我领取了十分钟在线奖励'
+    ConsoleCommands:
+      - 'me %CtOnlineReward_player%在%CtOnlineReward_world%世界领取了十分钟在线奖励!'
+  economy:
+    money: 10
+    points: 0
+  #领取奖励之后的动作
+  receiveAction:
+    #关闭gui
+    - '[closeGUI]'
+    #播放音效
+    - '[sound] ENTITY_PLAYER_LEVELUP'
+    #发送消息
+    - '[Message] &a&l● 恭喜你领取了十分钟在线奖励!'
+    - '[Message] &a&l● 你通过领取十分钟在线奖励获得了{money}元金币'
+    #打开gui
+    - '[openGUI] menu.yml'

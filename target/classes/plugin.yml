@@ -1,0 +1,8 @@
+name: CtOnlineReward
+version: 0.2.11
+main: cn.ctcraft.ctonlinereward.CtOnlineReward
+softdepend: [PlaceholderAPI,PlayerPoints,Vault]
+commands:
+  cor:
+    description: CtOnlineReward Main Command
+api-version: 1.20
